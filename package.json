@@ -1,12 +1,12 @@
 {
   "dependencies": {
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "request": "^2.88.2"
   },
   "name": "node34",
   "description": "lesson",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
