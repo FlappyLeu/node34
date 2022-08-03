@@ -1,5 +1,6 @@
 const { BADHINTS } = require("dns");
 const http = require("http");
+const fs = require("fs");
 
 const server = http.createServer((req, res) => {
   const { headers, url, method } = req;
@@ -7,19 +8,28 @@ const server = http.createServer((req, res) => {
   res.setHeader("content-type", "text/html");
 
   if (url === "/") {
-    res.statusCode = 200;
-    res.write("<h1>Welcome to our shop</h1>");
+    fs.readFile("./src/index.html", "utf8", (error, data) => {
+      if (error) {
+        res.statusCode = 500;
+        res.write("<h1>Error!</h1>");
+        res.end();
+      } else {
+        res.statusCode = 200;
+        res.write(data);
+        res.end();
+      }
+    });
     res.write(`<br><br>click <a href="/login">here to login</a>`);
     res.end();
   } else if (url === "/login") {
     // login form baina, html butsaanaa
+    fs.readFile("./src/login.html", "utf-8", (error, data) => {
+      res.statusCode = 200;
+      res.write(data);
+      res.end();
+    });
     res.statusCode = 200;
-    res.write(`<h1>Login hiih heseg</h1>`);
-    res.write(`<form action="/logincheck" method="POST">`);
-    res.write(`<br><br><input type="text" name="email"/>`);
-    res.write(`<br><br><input type="password" name="password"/>`);
-    res.write(`<br><br><input type="submit" value="Login"/>`);
-    res.write(`<form/>`);
+    res.write(data);
     res.end();
   } else if (url === "/logincheck" && method === "POST") {
     // login hiisnii daraa uuseh heseg
