@@ -19,8 +19,6 @@ const server = http.createServer((req, res) => {
         res.end();
       }
     });
-    res.write(`<br><br>click <a href="/login">here to login</a>`);
-    res.end();
   } else if (url === "/login") {
     // login form baina, html butsaanaa
     fs.readFile("./src/login.html", "utf-8", (error, data) => {
@@ -28,24 +26,43 @@ const server = http.createServer((req, res) => {
       res.write(data);
       res.end();
     });
-    res.statusCode = 200;
-    res.write(data);
-    res.end();
   } else if (url === "/logincheck" && method === "POST") {
     // login hiisnii daraa uuseh heseg
-    res.statusCode = 200;
-    res.write(`<h1>Login hiij uzlee</h1>`);
-    res.write("<br><h1>Amjilttai newterlee</h1>");
-    res.end();
+    const body = [];
+    req.on("data", (chunk) => {
+      body.push(chunk);
+    });
+    req.on("end", () => {
+      const parsedBody = Buffer.concat(body).toString();
+      const password = parsedBody.split("=")[2];
+      console.log("password===>", password);
+      if (password === "ocgDDEX01") {
+        res.statusCode = 302;
+        res.setHeader("Location", "/home");
+      } else {
+        res.statusCode = 302;
+        res.setHeader("Location", "/error");
+      }
+      res.end();
+      fs.writeFileSync("logininfo.txt", parsedBody);
+      res.write("Login huleej awlaa");
+      res.end();
+    });
   } else if (url === "/home") {
     // login hiisnii daraa uuseh heseg
-  } else {
-    res.statusCode = 404;
-    res.write(`<h1>404 Not Found</h1>`);
-    res.end();
+    fs.readFile("./src/home.html", "utf-8", (error, data) => {
+      res.statusCode = 200;
+      res.write(data);
+      res.end();
+    });
+  } else if (url === "/error") {
+    fs.readFile("./src/error.html", "utf-8", (error, data) => {
+      res.statusCode = 200;
+      res.write(data);
+      res.end();
+    });
   }
-});
-
-server.listen(5000, () => {
-  console.log("http server started on 5000");
+  server.listen(5000, () => {
+    console.log("http server started on 5000");
+  });
 });
