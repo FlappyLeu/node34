@@ -33,6 +33,8 @@ const server = http.createServer((req, res) => {
       body.push(chunk);
     });
     req.on("end", () => {
+      // Buffer-in concat gedeg ni binary irj baigaa datag bugdig ni niiluulne
+
       const parsedBody = Buffer.concat(body).toString();
       const password = parsedBody.split("=")[2];
       console.log("password===>", password);
