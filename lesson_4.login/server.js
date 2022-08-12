@@ -7,11 +7,11 @@ const server = http.createServer((req, res) => {
   res.setHeader("content-type", "utf-8");
 
   if (url === "/") {
-    fs.readFile("./src/index.html", "utf-8", (error, data) => {
+    fs.readFile(`./src/index.html`, `utf-8`, (error, data) => {
       if (error) {
         res.statusCode = 500;
         res.write("<h1>Error!</h1>");
-        res.write();
+        res.end();
       } else {
         res.statusCode = 200;
         res.write(data);
@@ -31,11 +31,35 @@ const server = http.createServer((req, res) => {
     });
     req.on(`end`, () => {
       const parsedBody = Buffer.concat(body).toString();
-      fs.writeSync("loginInfo.txt", parsedBody);
+      const password = parsedBody.split("=")[2];
+      if (password === "ocgDDEX01") {
+        // if login success
+        res.statusCode = 302;
+        res.setHeader("Location", "/home");
+      } else {
+        // if login failed
+        res.statusCode = 302;
+        res.setHeader("Location", "/error");
+      }
+      fs.writeFileSync("loginInfo.txt", parsedBody);
       res.write("Za huleej awlaa");
     });
   } else if (url === "/home") {
-    console.log(home);
+    fs.readFile("./src/home.html", "utf-8", (error, data) => {
+      res.statusCode = 200;
+      res.write(data);
+      res.end();
+    });
+  } else if (url === "/error") {
+    fs.readFile("./src/error.html", "utf-8", (error, data) => {
+      res.statusCode = 200;
+      res.write(data);
+      res.end();
+    });
+  } else {
+    res.statusCode = 404;
+    res.write("<h1>404 not found</h1>");
+    res.end();
   }
 });
 
