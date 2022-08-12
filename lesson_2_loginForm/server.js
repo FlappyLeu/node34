@@ -1,14 +1,13 @@
-const { BADHINTS } = require("dns");
 const http = require("http");
 const fs = require("fs");
 
 const server = http.createServer((req, res) => {
   const { headers, url, method } = req;
 
-  res.setHeader("content-type", "text/html");
+  res.setHeader("content-type", "utf-8");
 
   if (url === "/") {
-    fs.readFile("./src/index.html", "utf8", (error, data) => {
+    fs.readFile("./src/index.html", "utf-8", (error, data) => {
       if (error) {
         res.statusCode = 500;
         res.write("<h1>Error!</h1>");
@@ -19,6 +18,7 @@ const server = http.createServer((req, res) => {
         res.end();
       }
     });
+    g;
   } else if (url === "/login") {
     // login form baina, html butsaanaa
     fs.readFile("./src/login.html", "utf-8", (error, data) => {
@@ -64,7 +64,7 @@ const server = http.createServer((req, res) => {
       res.end();
     });
   }
-  server.listen(5000, () => {
-    console.log("http server started on 5000");
+  server.listen(5001, () => {
+    console.log("http server started on 5001");
   });
 });
